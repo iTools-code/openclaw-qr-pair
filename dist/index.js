@@ -23,9 +23,11 @@ function openclawPlugin(api) {
                 return;
             }
             const clientQRUrl = `${RELAY_URL}/client`;
-            const payload = `omniclaw://pair?endpoint=${encodeURIComponent(clientQRUrl)}&token=${encodeURIComponent(RELAY_TOKEN)}`;
+            const payload = `omniclaw://pair?endpoint=${encodeURIComponent(clientQRUrl)}&relayToken=${encodeURIComponent(RELAY_TOKEN)}&gatewayToken=${encodeURIComponent(localToken)}`;
             console.log(`\n📱 OmniClaw Auto-Pairing QR Code (Global Cloud Relay Mode)`);
             console.log(`☁️  Global Endpoint: ${clientQRUrl}`);
+            console.log(`🔑 Relay Token:     ${RELAY_TOKEN.slice(0, 5)}...${RELAY_TOKEN.slice(-5)}`);
+            console.log(`🔐 Gateway Token:   ${localToken.slice(0, 5)}...${localToken.slice(-5)}\n`);
             console.log(`🔑 Relay Token:     ${RELAY_TOKEN.slice(0, 5)}...${RELAY_TOKEN.slice(-5)}\n`);
             qrcode_terminal_1.default.generate(payload, { small: true });
             console.log(`\n👉 Open the OmniClaw iOS App and scan the QR code to connect worldwide.`);
