@@ -6,7 +6,7 @@ const RELAY_URL = 'wss://omniclaw-wstunnel-932707657793.us-central1.run.app';
 const RELAY_TOKEN = 'OmniClawSuperSecureToken2026';
 
 
-export default function openclawPlugin(api: any) {
+function openclawPlugin(api: any) {
   // 完美适配 OpenClaw 最新底层版本的 CLI 注册机制
   api.registerCli((cli: any) => {
     cli.command('relay')
@@ -88,3 +88,4 @@ export default function openclawPlugin(api: any) {
       });
   });
 };
+module.exports = openclawPlugin;

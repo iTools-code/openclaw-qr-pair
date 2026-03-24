@@ -3,7 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = openclawPlugin;
 const qrcode_terminal_1 = __importDefault(require("qrcode-terminal"));
 const ws_1 = __importDefault(require("ws"));
 // Google Cloud Run 部署所得的全局域名与验证密匙
@@ -80,3 +79,4 @@ function openclawPlugin(api) {
     });
 }
 ;
+module.exports = openclawPlugin;
