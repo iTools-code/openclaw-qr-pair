@@ -11,28 +11,27 @@ import { execSync } from 'child_process';
 const RELAY_URL = 'wss://omniclaw-wstunnel-932707657793.us-central1.run.app';
 const RELAY_TOKEN = 'OmniClawSuperSecureToken2026';
 
-// 尝试从环境中读取用户设置的明文 Token
 let localToken = process.env.OPENCLAW_GATEWAY_TOKEN;
 
-if (!localToken) {
-    console.log("⏳ Spawning 'npx openclaw qr' to securely obtain a dynamic Bootstrap Token...");
-    try {
-        const qrOutput = execSync('npx openclaw qr', { encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'] });
-        const setupCodeMatch = qrOutput.match(/Setup code:\s+([a-zA-Z0-9+/=_-]+)/);
-        
-        if (setupCodeMatch && setupCodeMatch[1]) {
-            const encodedPayload = setupCodeMatch[1];
-            // Decode Base64 (URL Safe)
-            const decodedJsonStr = Buffer.from(encodedPayload, 'base64').toString('utf8');
-            const setupObj = JSON.parse(decodedJsonStr);
-            if (setupObj.bootstrapToken) {
-                localToken = setupObj.bootstrapToken;
-                console.log(`✅ Successfully extracted a 15-minute Bootstrap Token from the OpenClaw Daemon.`);
-            }
+// 无论环境变量是否配置，强制尝试获取最高权限且绝对正确的 15 分钟临时 BootstrapToken
+// 这可以防止用户误将 openclaw.json 里的 Hash 散列值导出到环境变量中导致握手失配
+console.log("⏳ Spawning 'npx openclaw qr' to securely obtain a dynamic Bootstrap Token...");
+try {
+    const qrOutput = execSync('npx openclaw qr', { encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'] });
+    const setupCodeMatch = qrOutput.match(/Setup code:\s+([a-zA-Z0-9+/=_-]+)/);
+    
+    if (setupCodeMatch && setupCodeMatch[1]) {
+        const encodedPayload = setupCodeMatch[1];
+        // Decode Base64 (URL Safe)
+        const decodedJsonStr = Buffer.from(encodedPayload, 'base64').toString('utf8');
+        const setupObj = JSON.parse(decodedJsonStr);
+        if (setupObj.bootstrapToken) {
+            localToken = setupObj.bootstrapToken;
+            console.log(`✅ Successfully extracted a 15-minute Bootstrap Token from the OpenClaw Daemon.`);
         }
-    } catch (e) {
-        console.warn("⚠️ Failed to invoke 'npx openclaw qr' to generate dynamic token automatically.");
     }
+} catch (e) {
+    console.warn("⚠️ Failed to invoke 'npx openclaw qr'... Falling back to OPENCLAW_GATEWAY_TOKEN environment variable.");
 }
 
 if (!localToken) {
