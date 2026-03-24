@@ -1,5 +1,5 @@
 {
-  "id": "qr-pair",
+  "id": "openclaw-qr-pair",
   "name": "QR Code Auto-Pairing",
   "version": "1.0.0",
   "description": "Provides the 'openclaw qr' CLI command to generate connection QR codes for the OmniClaw iOS App.",
