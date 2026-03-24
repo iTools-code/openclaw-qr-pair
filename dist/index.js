@@ -9,7 +9,7 @@ const ws_1 = __importDefault(require("ws"));
 const RELAY_URL = 'wss://omniclaw-wstunnel-932707657793.us-central1.run.app';
 const RELAY_TOKEN = 'OmniClawSuperSecureToken2026';
 exports.default = (api) => {
-    api.cli.command('qr')
+    api.cli.command('relay')
         .description('Generate a global pairing QR code and start the Cloud Relay Host Bridge')
         .action(() => {
         // 获取本地网关保护 token (确保只有具备这个 token 的 iOS App 最终能通过身份验证)
