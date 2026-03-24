@@ -6,10 +6,11 @@ This plugin securely extracts your gateway's connection endpoint and active toke
 
 ## Installation
 
-Run the following command directly via your OpenClaw CLI to install remotely:
+Run the following commands on your server to clone and install the plugin from its local path:
 
 ```bash
-openclaw plugins install github:iTools-code/openclaw-qr-pair
+git clone https://github.com/iTools-code/openclaw-qr-pair.git
+openclaw plugins install ./openclaw-qr-pair
 ```
 
 *(Remember to restart your OpenClaw Gateway daemon after installation).*
