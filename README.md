@@ -27,7 +27,7 @@ openclaw qr
 If your OpenClaw gateway is running behind a reverse proxy (like Cloudflare Tunnels), you can override the display hostname:
 
 ```bash
-openclaw qr --host app.tabset.io --scheme wss
+openclaw qr --host your-domain.com --scheme wss
 ```
 
 Point your OmniClaw iOS app at the giant QR code rendered in your terminal, and watch the zero-trust handshake establish instantly! ✨

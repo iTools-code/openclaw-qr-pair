@@ -7,7 +7,7 @@ const qrcode_terminal_1 = __importDefault(require("qrcode-terminal"));
 exports.default = (api) => {
     api.cli.command('qr')
         .description('Generate a pairing QR code for the OmniClaw iOS app')
-        .option('-h, --host <hostname>', 'The gateway hostname or IP', 'app.tabset.io')
+        .option('-h, --host <hostname>', 'The gateway hostname or IP', '127.0.0.1')
         .option('-s, --scheme <scheme>', 'WebSocket scheme (ws or wss)', 'wss')
         .option('-p, --port <port>', 'Gateway port (will default to 443 if wss or 18789 if ws)', '')
         .action((options) => {
