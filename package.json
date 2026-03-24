@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Generate mobile pairing QR code for OmniClaw iOS App",
   "main": "dist/index.js",
+  "bin": {
+    "openclaw-relay": "dist/relay.js"
+  },
   "scripts": {
     "build": "tsc",
     "prepack": "npm run build"
