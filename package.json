@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "prepack": "npm run build"
+    "prepare": "npm run build"
   },
   "openclaw": {
     "extensions": [
