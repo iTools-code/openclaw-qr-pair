@@ -1,6 +1,6 @@
 {
   "name": "openclaw-qr-pair",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Generate mobile pairing QR code for OmniClaw iOS App",
   "main": "dist/index.js",
   "bin": {
