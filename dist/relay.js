@@ -6,37 +6,35 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const qrcode_terminal_1 = __importDefault(require("qrcode-terminal"));
 const ws_1 = __importDefault(require("ws"));
-const fs_1 = __importDefault(require("fs"));
-const os_1 = __importDefault(require("os"));
-const path_1 = __importDefault(require("path"));
+const child_process_1 = require("child_process");
 // Google Cloud Run 部署所得的全局域名与验证密匙
 const RELAY_URL = 'wss://omniclaw-wstunnel-932707657793.us-central1.run.app';
 const RELAY_TOKEN = 'OmniClawSuperSecureToken2026';
-// 尝试读取 OpenClaw 本地配置获取 Token
+// 尝试从环境中读取用户设置的明文 Token
 let localToken = process.env.OPENCLAW_GATEWAY_TOKEN;
-const configPaths = [
-    path_1.default.join(os_1.default.homedir(), '.openclaw', 'openclaw.json'),
-    path_1.default.join(os_1.default.homedir(), '.openclaw', 'config.json'),
-    path_1.default.join(os_1.default.homedir(), '.openclaw', 'plugins.json')
-];
 if (!localToken) {
-    for (const cp of configPaths) {
-        if (fs_1.default.existsSync(cp)) {
-            try {
-                const cfg = JSON.parse(fs_1.default.readFileSync(cp, 'utf8'));
-                if (cfg.gateway?.auth?.token) {
-                    localToken = cfg.gateway.auth.token;
-                    break;
-                }
+    console.log("⏳ Spawning 'npx openclaw qr' to securely obtain a dynamic Bootstrap Token...");
+    try {
+        const qrOutput = (0, child_process_1.execSync)('npx openclaw qr', { encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'] });
+        const setupCodeMatch = qrOutput.match(/Setup code:\s+([a-zA-Z0-9+/=_-]+)/);
+        if (setupCodeMatch && setupCodeMatch[1]) {
+            const encodedPayload = setupCodeMatch[1];
+            // Decode Base64 (URL Safe)
+            const decodedJsonStr = Buffer.from(encodedPayload, 'base64').toString('utf8');
+            const setupObj = JSON.parse(decodedJsonStr);
+            if (setupObj.bootstrapToken) {
+                localToken = setupObj.bootstrapToken;
+                console.log(`✅ Successfully extracted a 15-minute Bootstrap Token from the OpenClaw Daemon.`);
             }
-            catch (e) { }
         }
+    }
+    catch (e) {
+        console.warn("⚠️ Failed to invoke 'npx openclaw qr' to generate dynamic token automatically.");
     }
 }
 if (!localToken) {
-    console.error("❌ Gateway token not found! Please export OPENCLAW_GATEWAY_TOKEN=xxx");
-    // Fallback directly to prompting the user
-    console.error("⚠️ Alternatively, run 'openclaw qr' to find your token embedded in the printed 'Setup code'.");
+    console.error("❌ Gateway token not found! Please export OPENCLAW_GATEWAY_TOKEN=<plaintext_token_or_bootstrap>");
+    console.error("⚠️ Alternatively, ensure 'npx openclaw' is executable in this directory.");
     process.exit(1);
 }
 // 给 iPhone 扫的最终握手包：Endpoint 是我们刚建的云端 /client，但带着过审 Token
